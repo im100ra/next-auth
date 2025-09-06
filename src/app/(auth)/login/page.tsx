@@ -9,6 +9,7 @@ import { isValidIranPhone } from "@/lib/validation";
 import { setUser } from "@/lib/auth";
 import type { IRandomUserResponse } from "@/types/randomuser";
 import { PATHS } from "@/lib/paths";
+import { normalizeDigits } from "@/lib/normalize";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -54,10 +55,14 @@ export default function LoginPage() {
     }
   };
 
+  const handleNumberConversion = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const convertedValue = normalizeDigits(e.target.value);
+    e.target.value = convertedValue;
+    setPhone(convertedValue);
+  };
+
   return (
-    <div
-      className="w-full max-w-md rounded-2xl border  p-6 shadow-xl backdrop-blur-sm"
-    >
+    <div className="w-full max-w-md rounded-2xl border  p-6 shadow-xl backdrop-blur-sm">
       <h1 className="mb-1 text-2xl font-bold ">ورود</h1>
       <p className="mb-6 text-sm leading-6">
         برای ادامه، شماره موبایل خود را وارد کنید.
@@ -73,7 +78,7 @@ export default function LoginPage() {
             inputMode="tel"
             autoComplete="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={handleNumberConversion}
             aria-invalid={!!error}
             aria-describedby={error ? "phone-error" : undefined}
             className="placeholder:text-slate-500  focus-visible:ring-2 focus-visible:ring-cyan-400"
