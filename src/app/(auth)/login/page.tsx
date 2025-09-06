@@ -39,7 +39,7 @@ export default function LoginPage() {
 
       const fullName = `${r.name.first} ${r.name.last}`;
       setUser({
-        name: fullName,
+        fullName,
         email: r.email,
         avatar: r.picture.large,
         phone,
