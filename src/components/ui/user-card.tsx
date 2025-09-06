@@ -3,8 +3,12 @@ import Image from "next/image";
 import { Button } from "./button";
 import { clearUser, StoredUser } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+type Props = StoredUser & {
+  className?: string;
+};
 
-export function UserCard(user: StoredUser) {
+export function UserCard(user: Props) {
   const router = useRouter();
 
   const logout = () => {
@@ -20,30 +24,47 @@ export function UserCard(user: StoredUser) {
       );
 
   return (
-    <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 shadow-xl">
-      <div className="flex items-center gap-4">
+    <div
+      className={cn(
+        "lg:max-w-2xl max-w-11/12 w-full rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-xl",
+        user.className
+      )}
+      dir="rtl"
+    >
+      <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-start">
         <Image
           src={avatarSrc}
-          alt={user?.name ?? "کاربر"}
-          width={64}
-          height={64}
-          className="rounded-full object-cover ring-2 ring-[color:var(--ring)]"
+          alt={user?.fullName ?? "کاربر"}
+          width={80}
+          height={80}
+          sizes="(max-width: 640px) 64px, 80px"
+          className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover ring-2 ring-[color:var(--ring)]"
           unoptimized
         />
-        <div className="text-right">
-          <h1 className="text-2xl font-semibold">خوش آمدی، {user?.name} 👋</h1>
-          <p className="text-sm text-muted-foreground">{user?.email}</p>
+        <div className="text-center sm:text-right">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            خوش آمدی، {user?.fullName} 👋
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground break-all sm:break-normal">
+            {user?.email}
+          </p>
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
+      <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-sm text-muted-foreground text-center sm:text-right">
           ورود با شماره:{" "}
           <span className="font-mono" dir="ltr">
             {user?.phone}
           </span>
         </div>
-        <Button variant="default" onClick={logout} aria-label="خروج">
+
+        <Button
+          variant="default"
+          onClick={logout}
+          aria-label="خروج"
+          className="w-full sm:w-auto"
+        >
           خروج
         </Button>
       </div>
