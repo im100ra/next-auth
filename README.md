@@ -1,36 +1,140 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# App (Next.js + TS + Tailwind + shadcn/ui)
+
+Minimal client-side auth demo with Login & Dashboard.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm i
 pnpm dev
-# or
-bun dev
+# http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Useful scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prepare": "husky"
+  }
+}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js (App Router, TypeScript)
+- Tailwind CSS
+- shadcn/ui
+- Client-only auth state (localStorage)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Commit Style (Conventional Commits + commitlint)
 
-## Deploy on Vercel
+We use **Conventional Commits** enforced by **commitlint** (via Husky pre-commit hook).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Install & Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+pnpm add -D @commitlint/{config-conventional,cli} husky
+pnpm exec husky init
+```
+
+Create `commitlint.config.ts` (or `.js`) in the repo root:
+
+```ts
+import type { UserConfig } from "@commitlint/types";
+
+const config: UserConfig = {
+  extends: ["@commitlint/config-conventional"],
+  rules: {
+    "type-enum": [
+      2,
+      "always",
+      [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert",
+      ],
+    ],
+    "scope-case": [2, "always", "kebab-case"],
+    "subject-case": [0],
+  },
+};
+
+export default config;
+```
+
+Add **commit-msg** hook:
+
+```bash
+pnpm exec husky set .husky/commit-msg 'pnpm commitlint --edit "$1"'
+```
+
+> Now any commit message will be validated automatically.
+
+### Format
+
+```
+<type>(<scope>): <subject>
+```
+
+**Types**: `feat` | `fix` | `docs` | `style` | `refactor` | `perf` | `test` | `build` | `ci` | `chore` | `revert`
+
+**Examples**
+
+- `feat(auth): add login form with iran phone validation`
+- `fix(dashboard): handle empty avatar fallback`
+- `refactor(ui): extract button variants`
+- `docs(readme): add commitlint instructions`
+
+---
+
+## Project Structure (short)
+
+```
+src/
+  app/
+    (auth)/login/page.tsx
+    (auth)/layout.tsx
+    dashboard/page.tsx
+    layout.tsx
+    globals.css
+  components/
+    ui/...
+    auth/auth-gate.tsx
+  lib/
+    auth.ts
+    validation.ts
+  config/
+    protected-routes.ts
+  types/
+    randomuser.ts
+```
+
+---
+
+## Environment / Deployment
+
+No env vars needed.  
+Deploy on Vercel (Next.js preset). Build command: `pnpm build`, Output: `.next`.
+
+---
+
+## License
+
+MIT
