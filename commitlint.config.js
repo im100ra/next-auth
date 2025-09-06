@@ -11,3 +11,4 @@ export default {
     "header-max-length": [2, "always", 100], // optional, keep it clean
   },
 };
+ 
